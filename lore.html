@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONCORD // Galactic Archives</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-space: #0a0a1f;
+            --stardust: #ffffff99;
+            --void-purple: #6a00ff;
+            --warning-red: #ff0033;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Space Background */
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white"/><circle cx="30" cy="25" r="0.7" fill="white"/><circle cx="70" cy="15" r="0.3" fill="white"/><circle cx="85" cy="45" r="0.5" fill="white"/><circle cx="90" cy="90" r="0.8" fill="white"/></svg>');
+            background-size: cover;
+            z-index: -2;
+        }
+
+        /* Header */
+        .archive-header {
+            padding: 3rem 10%;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .archive-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--void-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .archive-subtitle {
+            color: var(--stardust);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Timeline Navigation */
+        .era-selector {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 10%;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .era-button {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 0.8rem 2rem;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .era-button:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        .era-button.active {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+            font-weight: bold;
+        }
+
+        /* Lore Content */
+        .lore-container {
+            display: flex;
+            padding: 0 10% 5rem;
+            gap: 3rem;
+        }
+
+        .lore-timeline {
+            flex: 0 0 300px;
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            border-right: 1px solid rgba(0, 243, 255, 0.2);
+            padding-right: 2rem;
+        }
+
+        .timeline-year {
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .timeline-year:hover {
+            color: white;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .timeline-year.active {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .lore-content {
+            flex: 1;
+        }
+
+        .lore-section {
+            background: rgba(10, 10, 31, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 5px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+
+        .lore-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 243, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: var(--stardust);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .section-body {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .classified {
+            background: rgba(255, 0, 51, 0.05);
+            border-left: 3px solid var(--warning-red);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .classified::before {
+            content: "CLASSIFIED";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--warning-red);
+            color: black;
+            padding: 2px 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .lore-container {
+                flex-direction: column;
+            }
+            
+            .lore-timeline {
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+                padding-bottom: 2rem;
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .archive-title {
+                font-size: 2.5rem;
+            }
+            
+            .era-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <header class="archive-header">
+        <h1 class="archive-title">GALACTIC ARCHIVES</h1>
+        <p class="archive-subtitle">Security clearance required. Unauthorized access to Concord historical records is punishable under Galactic Statute 7-11.</p>
+    </header>
+
+    <div class="era-selector">
+        <button class="era-button active">PRE-COLLAPSE ERA</button>
+        <button class="era-button">GREAT COLLAPSE</button>
+        <button class="era-button">NORTHSTAR INITIATIVE</button>
+        <button class="era-button">FACTION WARS</button>
+        <button class="era-button">MODERN ERA</button>
+    </div>
+
+    <div class="lore-container">
+        <div class="lore-timeline">
+            <div class="timeline-year active">2157</div>
+            <div class="timeline-year">2183</div>
+            <div class="timeline-year">2199</div>
+            <div class="timeline-year">2215</div>
+            <div class="timeline-year">2238</div>
+            <div class="timeline-year">2250</div>
+            <div class="timeline-year">2267</div>
+        </div>
+
+        <div class="lore-content">
+            <section class="lore-section">
+                <div class="section-header">
+                    <div class="section-icon">CD</div>
+                    <div>
+                        <h2 class="section-title">Concord Dawn</h2>
+                        <p class="section-subtitle">Founding Era | 2157-2183</p>
+                    </div>
+                </div>
+                <div class="section-body">
+                    <p>The Concord Project began as a secret military initiative when Earth's governments detected the first alien signals from the Andromeda galaxy. Dr. Elias Voss's team developed the first prototype FTL drive using mysterious alien alloys recovered from the Tunguska site.</p>
+                    
+                    <div class="classified">
+                        <p>CLASSIFIED: Project Morningstar files confirm these "alloys" were actually fragments of a 200,000-year-old starship of unknown origin. All research personnel were administered Class-A amnestics after initial study.</p>
+                    </div>
+                    
+                    <p>By 2172, the first Concord-class vessels were operational, though limited to Sol system patrols. The public unveiling in 2181 marked humanity's official transition to a spacefaring civilization.</p>
+                </div>
+            </section>
+
+            <section class="lore-section">
+                <div class="section-header">
+                    <div class="section-icon">GC</div>
+                    <div>
+                        <h2 class="section-title">The Great Collapse</h2>
+                        <p class="section-subtitle">Galactic Crisis | 2199-2215</p>
+                    </div>
+                </div>
+                <div class="section-body">
+                    <p>First contact with the Velnar Collective turned catastrophic when their "diplomatic envoys" unleashed the Grey Plague nanovirus on Mars Colony. Within 18 months, 92% of trans-Jovian colonies were infected.</p>
+                    
+                    <p>The Concord Armada's desperate last stand at Tau Ceti bought enough time for the Northstar Initiative to evacuate key personnel to the Proxima Centauri system. Admiral Rachel Kane's famous last transmission: "We are the dam. The flood stops here."</p>
+                    
+                    <div class="classified">
+                        <p>CLASSIFIED: Recent discoveries suggest the Velnar may have been fleeing an even greater threat from the galactic core. All research into "Entity Θ" is strictly prohibited.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lore-section">
+                <div class="section-header">
+                    <div class="section-icon">NS</div>
+                    <div>
+                        <h2 class="section-title">Northstar Rising</h2>
+                        <p class="section-subtitle">Rebirth Era | 2238-Present</p>
+                    </div>
+                </div>
+                <div class="section-body">
+                    <p>Using salvaged Concord technology and secret research from the Jupiter Think Tank, the reborn Northstar Fleet launched Operation Phoenix in 2238. The recapture of the Sirius shipyards marked humanity's first military victory in 39 years.</p>
+                    
+                    <p>Modern Concord operates as a decentralized network of allied systems, with the Northstar Council serving as both military command and provisional government. Recent intelligence suggests the Velnar Collective has fractured into warring factions, creating new opportunities and threats.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Era selector functionality
+        const eraButtons = document.querySelectorAll('.era-button');
+        eraButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                eraButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would load the appropriate era content
+            });
+        });
+
+        // Timeline year selection
+        const timelineYears = document.querySelectorAll('.timeline-year');
+        timelineYears.forEach(year => {
+            year.addEventListener('click', () => {
+                timelineYears.forEach(y => y.classList.remove('active'));
+                year.classList.add('active');
+                // Scroll to corresponding section
+            });
+        });
+
+        // Animate sections on scroll
+        const loreSections = document.querySelectorAll('.lore-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        loreSections.forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.5s ease-out';
+            observer.observe(section);
+        });
+
+        // Star twinkle effect
+        setInterval(() => {
+            const stars = document.querySelector('.stars');
+            stars.style.background = 
+                `radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                ${Array.from({length: 20}, (_,i) => 
+                    `<circle cx="${Math.random()*100}" cy="${Math.random()*100}" r="${Math.random()*0.8}" 
+                    fill="white" opacity="${Math.random()}"/>`).join('')}
+                </svg>')`;
+        }, 3000);
+    </script>
+</body>
+</html>

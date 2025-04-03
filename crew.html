@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONCORD // Crew Manifest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-space: #0a0a1f;
+            --stardust: #ffffff99;
+            --void-purple: #6a00ff;
+            --warning-red: #ff0033;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Space Background */
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white"/><circle cx="30" cy="25" r="0.7" fill="white"/><circle cx="70" cy="15" r="0.3" fill="white"/><circle cx="85" cy="45" r="0.5" fill="white"/><circle cx="90" cy="90" r="0.8" fill="white"/></svg>');
+            background-size: cover;
+            z-index: -2;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 2rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px var(--neon-blue);
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--stardust);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Crew Header */
+        .crew-header {
+            padding: 5rem 10% 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .crew-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--void-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .crew-subtitle {
+            color: var(--stardust);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Crew Grid */
+        .crew-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 10%;
+        }
+
+        .crew-card {
+            background: rgba(10, 10, 31, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .crew-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .crew-image {
+            margin-left: 50px; /* Adjust as needed */
+            margin-right: 50px;
+            width: 50%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+
+        .crew-info {
+            padding: 1.5rem;
+        }
+
+        .crew-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--neon-blue);
+        }
+
+        .crew-rank {
+            color: var(--stardust);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .crew-bio {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: var(--stardust);
+        }
+
+        .crew-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .classified-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--warning-red);
+            color: black;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .crew-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .crew-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-logo">CONCORD</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="lore.html">Lore</a>
+            <a href="crew.html" class="active">Crew</a>
+            <a href="media.html">Media</a>
+        </div>
+    </nav>
+
+    <header class="crew-header">
+        <h1 class="crew-title">CREW MANIFEST</h1>
+        <p class="crew-subtitle">Active personnel roster - Security clearance Gamma-3 required. Unauthorized access prohibited under Concord Directive 7.</p>
+    </header>
+
+    <div class="crew-grid">
+        <!-- Crew Member 1 -->
+        <div class="crew-card">
+            <img src="charCards/1-Off.webp" alt="Captain Elias Voss" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">1-Off</h3>
+                <span class="crew-rank">Anchor</span>
+                <p class="crew-bio">Trash Dispenser – More Trash Bombs with higher damage.
+                </p>
+                <div class="crew-skills">
+                    <span class="skill-tag">TACTICAL GENIUS</span>
+                    <span class="skill-tag">FTL PHYSICS</span>
+                    <span class="skill-tag">COMBAT ENGINEER</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Member 2 -->
+        <div class="crew-card">
+            <div class="classified-badge">CLASSIFIED</div>
+            <img src="https://i.imgur.com/JQK9LtX.png" alt="Agent Nyx" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">Bazz</h3>
+                <span class="crew-rank">BLACK OPS | EYES ONLY</span>
+                <p class="crew-bio">Identity and background redacted. Operational record includes 47 confirmed high-value eliminations. Specializes in alien tech acquisition.</p>
+                <div class="crew-skills">
+                    <span class="skill-tag">INFILTRATION</span>
+                    <span class="skill-tag">XENOTECH</span>
+                    <span class="skill-tag">NEURAL CLOAK</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Member 3 -->
+        <div class="crew-card">
+            <img src="https://i.imgur.com/JQK9LtX.png" alt="Chief Mara Kess" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">CHIEF MARA KESS</h3>
+                <span class="crew-rank">CHIEF ENGINEER | IRONCLAD DIVISION</span>
+                <p class="crew-bio">Keeps the fleet flying with scrap and determination. Survived 3 shipwrecks. Known for jury-rigging alien tech into Concord systems.</p>
+                <div class="crew-skills">
+                    <span class="skill-tag">ENGINEERING</span>
+                    <span class="skill-tag">SALVAGE</span>
+                    <span class="skill-tag">PLASMA WELDING</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Member 4 -->
+        <div class="crew-card">
+            <img src="https://i.imgur.com/JQK9LtX.png" alt="Dr. Rook" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">DR. LIRAN "ROOK" VEL</h3>
+                <span class="crew-rank">CHIEF MEDICAL | EXOBIOLOGY</span>
+                <p class="crew-bio">Former Velnar scientist who defected. The only known survivor of Grey Plague infection. His research is our best hope against biological threats.</p>
+                <div class="crew-skills">
+                    <span class="skill-tag">XENOBIOLOGY</span>
+                    <span class="skill-tag">NANOMEDICINE</span>
+                    <span class="skill-tag">PLAGUE IMMUNE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Member 5 -->
+        <div class="crew-card">
+            <div class="classified-badge">MIA</div>
+            <img src="https://i.imgur.com/JQK9LtX.png" alt="Commander Jace" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">COMMANDER JACE RYDER</h3>
+                <span class="crew-rank">MISSING IN ACTION | PRESUMED KIA</span>
+                <p class="crew-bio">Last contact during Operation Silent Hammer. Fleet's top pilot with 127 confirmed dogfight victories. Status unknown after Tau Ceti blackout.</p>
+                <div class="crew-skills">
+                    <span class="skill-tag">ACE PILOT</span>
+                    <span class="skill-tag">STEALTH OPS</span>
+                    <span class="skill-tag">ZERO-G COMBAT</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Member 6 -->
+        <div class="crew-card">
+            <img src="https://i.imgur.com/JQK9LtX.png" alt="Sentry-7" class="crew-image">
+            <div class="crew-info">
+                <h3 class="crew-name">SENTRY-7</h3>
+                <span class="crew-rank">AUTOMATED DEFENSE PLATFORM</span>
+                <p class="crew-bio">Last functioning unit of the Mars Defense Grid. AI core was salvaged from the ruins of Olympus Mons. Primary weapons systems at 43% capacity.</p>
+                <div class="crew-skills">
+                    <span class="skill-tag">TACTICAL AI</span>
+                    <span class="skill-tag">PLASMA CANNONS</span>
+                    <span class="skill-tag">SENTINEL PROTOCOL</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Star twinkle effect
+        setInterval(() => {
+            const stars = document.querySelector('.stars');
+            stars.style.background = 
+                `radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                ${Array.from({length: 20}, (_,i) => 
+                    `<circle cx="${Math.random()*100}" cy="${Math.random()*100}" r="${Math.random()*0.8}" 
+                    fill="white" opacity="${Math.random()}"/>`).join('')}
+                </svg>')`;
+        }, 3000);
+
+        // Card hover effects
+        const crewCards = document.querySelectorAll('.crew-card');
+        crewCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const name = card.querySelector('.crew-name');
+                name.style.textShadow = '0 0 10px var(--neon-blue)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const name = card.querySelector('.crew-name');
+                name.style.textShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
