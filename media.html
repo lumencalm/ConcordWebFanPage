@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONCORD // Media Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-space: #0a0a1f;
+            --stardust: #ffffff99;
+            --void-purple: #6a00ff;
+            --warning-red: #ff0033;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Space Background */
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white"/><circle cx="30" cy="25" r="0.7" fill="white"/><circle cx="70" cy="15" r="0.3" fill="white"/><circle cx="85" cy="45" r="0.5" fill="white"/><circle cx="90" cy="90" r="0.8" fill="white"/></svg>');
+            background-size: cover;
+            z-index: -2;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 2rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px var(--neon-blue);
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--stardust);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Media Header */
+        .media-header {
+            padding: 5rem 10% 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .media-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--void-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .media-subtitle {
+            color: var(--stardust);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Filter Navigation */
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem auto;
+            flex-wrap: wrap;
+        }
+
+        .filter-nav button {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .filter-nav button:hover,
+        .filter-nav button.active {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* Media Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2rem;
+            padding: 3rem 10%;
+        }
+
+        .media-item {
+            background: rgba(10, 10, 31, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .media-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .media-item iframe {
+            width: 100%;  /* Ensure it takes full width of the card */
+            height: 250px; /* Adjust height as needed */
+            object-fit: contain;  /* Ensure the aspect ratio is preserved */
+        }
+
+
+        .media-item-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .media-item-desc {
+            color: var(--stardust);
+            padding: 0 1rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .classified-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--warning-red);
+            color: black;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .media-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .media-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem 5%;
+            }
+            
+            .filter-nav {
+                gap: 0.8rem;
+            }
+            
+            .filter-nav button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-logo">CONCORD</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="lore.html">Lore</a>
+            <a href="crew.html">Crew</a>
+            <a href="media.html" class="active">Media</a>
+        </div>
+    </nav>
+
+    <header class="media-header">
+        <h1 class="media-title">MEDIA ARCHIVE</h1>
+        <p class="media-subtitle">Classified multimedia database - Security clearance Gamma-2 required. Unauthorized access will be met with immediate termination.</p>
+        
+        <div class="filter-nav">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="gameplay">GAMEPLAY</button>
+            <button class="filter-btn" data-filter="concept">CONCEPT ART</button>
+            <button class="filter-btn" data-filter="trailers">TRAILERS</button>
+            <button class="filter-btn" data-filter="cinematics">CINEMATICS</button>
+        </div>
+    </header>
+
+    <section class="media-grid">
+        <div class="media-item gameplay">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/0zzJt0SVlYE">
+            </iframe>
+            <h3 class="media-item-title">Concord - Gameplay Trailer</h3>
+            <p class="media-item-desc">Redacted mission footage</p>
+        </div>
+        
+        <div class="media-item concept">
+            <img src="conceptArt/It-Z.jpg" alt="Concept art">
+            <h3 class="media-item-title">It-Z Concept</h3>
+            <p class="media-item-desc">Early design for It-Z</p>
+        </div>
+        
+        <div class="media-item trailers">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/7jqQJhjf_3o?si=7gQP_L8NPuWkQgjM">
+            </iframe>
+            <h3 class="media-item-title">Concord - Gameplay Trailer</h3>
+            <p class="media-item-desc">Redacted mission footage</p>
+        </div>
+        
+        <div class="media-item cinematics">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/tidWtDadOAA">
+            </iframe>
+            <h3 class="media-item-title">Concord - 'The Stars Are Ours' Cinematic Vignette Season 0: Episode 0</h3>
+        </div>
+        
+        <div class="media-item gameplay">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/smo-DOSOaU0">
+            </iframe>
+            <h3 class="media-item-title">Concord - Dev Talk</h3>
+            <p class="media-item-desc">Launch and the Adventure Ahead</p>
+        </div>
+        
+        <div class="media-item concept">
+            <img src="conceptArt/Lark.jpg" alt="Concept art">
+            <h3 class="media-item-title">Lark Concept</h3>
+            <p class="media-item-desc">Early design for Lark</p>
+        </div>
+
+        <div class="media-item trailers">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/mBnStS9d2xg">
+            </iframe>
+            <h3 class="media-item-title">Concord - Reveal Cinematic Trailer</h3>
+            <p class="media-item-desc">Reveal State of Play Trailer</p>
+        </div>
+
+        <div class="media-item cinematics">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/GL-proJDPkU?si=qOZ7W6HdRqi_9vc5">
+            </iframe>
+            <h3 class="media-item-title">Concord - ‘Vocal Cartographer’ Cinematic Vignette Season 0: Episode 1</h3>
+        </div>
+
+        <div class="media-item cinematics">
+            <iframe width="420" height="240"
+            src="https://www.youtube.com/embed/VB2usfhu8Nc">
+            </iframe>
+            <h3 class="media-item-title">Concord - 'Name_Final_Final_02' Cinematic Vignette</h3>
+        </div>
+    </section>
+
+    <script>
+        // Star twinkle effect
+        setInterval(() => {
+    const stars = document.querySelector('.stars');
+    stars.style.background = 
+        `radial-gradient(ellipse at bottom, #1a1a3a 0%, var(--deep-space) 100%),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+        ${Array.from({length: 20}, (_,i) => 
+            `<circle cx="${Math.random()*100}" cy="${Math.random()*100}" r="${Math.random()*0.8}" 
+            fill="white" opacity="${Math.random()}"/>`).join('')}
+        </svg>')`;
+}, 3000);
+
+
+        // Filter functionality
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const mediaItems = document.querySelectorAll(".media-item");
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                filterButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                const filter = button.getAttribute("data-filter");
+
+                mediaItems.forEach(item => {
+                    if (filter === "all" || item.classList.contains(filter)) {
+                        item.classList.remove("hidden");
+                    } else {
+                        item.classList.add("hidden");
+                    }
+                });
+            });
+        });
+
+        // Card hover effects
+        const mediaCards = document.querySelectorAll('.media-item');
+        mediaCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const title = card.querySelector('.media-item-title');
+                title.style.textShadow = '0 0 10px var(--neon-blue)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const title = card.querySelector('.media-item-title');
+                title.style.textShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
